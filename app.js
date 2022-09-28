@@ -7,7 +7,7 @@ const app = express();
 
 async function main() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/mestodb', {
+    await mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
       useNewUrlParser: true,
       useUnifiedTopology: false,
     });
