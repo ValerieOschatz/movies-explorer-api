@@ -1,9 +1,22 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
+const routes = require('./routes');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const defaultError = require('./middlewares/defaultError');
 
 const app = express();
+
+app.use(cookieParser());
+app.use(requestLogger);
+app.use(express.json(), routes);
+app.use(errorLogger);
+app.use(errors());
+app.use(defaultError);
 
 async function main() {
   try {

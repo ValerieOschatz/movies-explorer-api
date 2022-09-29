@@ -25,6 +25,7 @@ const createMovie = async (req, res, next) => {
       image,
       trailerLink,
       thumbnail,
+      movieId,
       nameRU,
       nameEN,
     } = req.body;
@@ -40,6 +41,7 @@ const createMovie = async (req, res, next) => {
       image,
       trailerLink,
       thumbnail,
+      movieId,
       nameRU,
       nameEN,
       owner,
