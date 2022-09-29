@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 
-const { PORT = 3000 } = process.env;
 const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const defaultError = require('./middlewares/defaultError');
+const { port, dbUrl } = require('./utils/data');
 
 const app = express();
 
@@ -20,23 +20,20 @@ app.use(defaultError);
 
 async function main() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+    await mongoose.connect(dbUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: false,
     });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.log(err);
   }
 
   try {
-    await app.listen(PORT);
+    await app.listen(port);
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.log(err);
   }
-  // eslint-disable-next-line no-console
-  console.log(`App listening on port ${PORT}`);
+  console.log(`App listening on port ${port}`);
 }
 
 main();

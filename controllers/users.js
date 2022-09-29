@@ -1,10 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('../models/user');
-
-const { CREATED } = require('../utils/data');
+const { CREATED, secretKey } = require('../utils/data');
 
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
@@ -67,7 +65,7 @@ const login = async (req, res, next) => {
     const user = await User.findUserByCredentials(email, password);
     const token = jwt.sign(
       { _id: user._id },
-      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      secretKey,
       { expiresIn: '7d' },
     );
     return res.cookie('jwt', token, {
