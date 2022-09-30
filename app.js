@@ -3,14 +3,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 
 const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const defaultError = require('./middlewares/defaultError');
 const { port, dbUrl } = require('./utils/data');
+const limiter = require('./middlewares/rateLimiter');
 
 const app = express();
 
+app.use(helmet());
+app.use(limiter);
 app.use(cookieParser());
 app.use(requestLogger);
 app.use(express.json(), routes);
