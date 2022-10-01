@@ -10,12 +10,14 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const defaultError = require('./middlewares/defaultError');
 const { port, dbUrl } = require('./utils/data');
 const limiter = require('./middlewares/rateLimiter');
+const cors = require('./middlewares/cors');
 
 const app = express();
 
 app.use(helmet());
 app.use(limiter);
 app.use(cookieParser());
+app.use(cors);
 app.use(requestLogger);
 app.use(express.json(), routes);
 app.use(errorLogger);
