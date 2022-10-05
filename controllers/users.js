@@ -2,8 +2,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const { CREATED } = require('../utils/data');
 const { secretKey } = require('../utils/jwtConfig');
+const {
+  CREATED,
+  notFoundUserErrorText,
+  badRequestErrorText,
+  conflictErrorText,
+} = require('../utils/data');
 
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
@@ -13,7 +18,7 @@ const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(notFoundUserErrorText);
     }
     return res.send(user);
   } catch (err) {
@@ -30,12 +35,15 @@ const updateUser = async (req, res, next) => {
       { new: true, runValidators: true },
     );
     if (!user) {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(notFoundUserErrorText);
     }
     return res.send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new BadRequestError('Переданы некорректные данные'));
+      return next(new BadRequestError(badRequestErrorText));
+    }
+    if (err.code === 11000) {
+      return next(new ConflictError(conflictErrorText));
     }
     return next(err);
   }
@@ -51,10 +59,10 @@ const createUser = async (req, res, next) => {
     return res.status(CREATED).send(visibleUser);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new BadRequestError('Переданы некорректные данные'));
+      return next(new BadRequestError(badRequestErrorText));
     }
     if (err.code === 11000) {
-      return next(new ConflictError('Пользователь с этим email уже существует'));
+      return next(new ConflictError(conflictErrorText));
     }
     return next(err);
   }

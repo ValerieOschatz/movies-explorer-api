@@ -1,5 +1,10 @@
 const Movie = require('../models/movie');
-const { CREATED } = require('../utils/data');
+const {
+  CREATED,
+  badRequestErrorText,
+  notFoundFilmErrorText,
+  forbiddenErrorText,
+} = require('../utils/data');
 
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
@@ -50,7 +55,7 @@ const createMovie = async (req, res, next) => {
     return res.status(CREATED).send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new BadRequestError('Переданы некорректные данные'));
+      return next(new BadRequestError(badRequestErrorText));
     }
     return next(err);
   }
@@ -60,16 +65,16 @@ const deleteMovie = async (req, res, next) => {
   try {
     const movie = await Movie.findById(req.params.movieId);
     if (!movie) {
-      throw new NotFoundError('Запрашиваемый фильм не найден');
+      throw new NotFoundError(notFoundFilmErrorText);
     }
     if (movie.owner.toString() === req.user._id) {
       await movie.remove();
       return res.send({ message: 'Фильм удален' });
     }
-    throw new ForbiddenError('Нельзя удалить чужой фильм');
+    throw new ForbiddenError(forbiddenErrorText);
   } catch (err) {
     if (err.name === 'CastError') {
-      return next(new BadRequestError('Переданы некорректные данные'));
+      return next(new BadRequestError(badRequestErrorText));
     }
     return next(err);
   }

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { regex } = require('../utils/data');
+const { isURL } = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -26,7 +26,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: [true, 'поле image обязательное'],
     validate: {
-      validator: (v) => regex.test(v),
+      validator: (v) => isURL(v),
       message: 'введите адрес ссылки',
     },
   },
@@ -34,7 +34,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: [true, 'поле trailerLink обязательное'],
     validate: {
-      validator: (v) => regex.test(v),
+      validator: (v) => isURL(v),
       message: 'введите адрес ссылки',
     },
   },
@@ -42,7 +42,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: [true, 'поле thumbnail обязательное'],
     validate: {
-      validator: (v) => regex.test(v),
+      validator: (v) => isURL(v),
       message: 'введите адрес ссылки',
     },
   },
