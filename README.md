@@ -27,4 +27,11 @@ Movies Explorer - сервис, в котором можно найти филь
 
 
 API: https://api.vo.movies-explorer.nomoredomains.icu  
-Публичный IP-адрес сервера - 178.154.221.246
+Публичный IP-адрес сервера - 178.154.221.246  
+
+### Локальный запуск проекта
+
+`npm i` — установка зависимостей  
+`mongod` — запуск mongodDB  
+`npm run start` — запуск сервера  
+`npm run dev` — запуск сервера с hot-reload  
